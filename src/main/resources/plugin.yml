@@ -1,0 +1,28 @@
+name: WorldTimer
+version: '${project.version}'
+main: org.blueobsidian.worldTimer.WorldTimer
+api-version: '1.20'
+description: Enforces configurable time limits for specific worlds with rank-based overrides.
+authors: [BlueObsidian]
+depend: [LuckPerms]
+softdepend: [Multiverse-Core]
+
+commands:
+  worldtimer:
+    description: WorldTimer admin commands
+    usage: /worldtimer <reload|status|reset|addtime|setcooldown>
+    aliases: [wt]
+
+permissions:
+  worldtimer.admin:
+    description: Full access to all WorldTimer commands
+    default: op
+  worldtimer.reload:
+    description: Reload WorldTimer configuration
+    default: op
+  worldtimer.manage:
+    description: Manage player timers (reset, addtime, setcooldown)
+    default: op
+  worldtimer.status:
+    description: View timer status
+    default: op

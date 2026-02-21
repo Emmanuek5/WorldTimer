@@ -1,0 +1,43 @@
+# WorldTimer Configuration
+
+# How often (in seconds) the plugin ticks to update timers
+tick-seconds: 1
+
+# Storage settings
+storage:
+  type: sqlite  # sqlite or mysql
+  # MySQL settings (only used if type is mysql)
+  mysql:
+    host: localhost
+    port: 3306
+    database: worldtimer
+    username: root
+    password: ""
+
+# Message templates
+# Placeholders: %time_remaining%, %world%, %cooldown_remaining%, %player%
+messages:
+  prefix: "&8[&bWorldTimer&8] &r"
+  warn: "&eYou have &6%time_remaining% &eremaining in &6%world%&e."
+  expired: "&cYour time in &6%world% &chas expired."
+  cooldown: "&cYou must wait &6%cooldown_remaining% &cbefore re-entering &6%world%&c."
+  cooldown-bypass: "&aYour cooldown for &6%world% &ahas been cleared."
+
+# Per-world configuration
+worlds:
+  resource:
+    enabled: true
+    main-world: "survival"
+    teleport-location: "spawn"
+    default-limit-seconds: 1800
+    default-cooldown-seconds: 600
+    limit-permission-prefix: "worldtimer.limit.resource."
+    cooldown-permission-prefix: "worldtimer.cooldown.resource."
+    bypass-permission: "worldtimer.bypass.resource"
+    warn-at-seconds:
+      - 600
+      - 300
+      - 60
+      - 10
+    expire-commands:
+      - "title %player% title {\"text\":\"Time is up!\",\"color\":\"red\"}"
