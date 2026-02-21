@@ -4,8 +4,7 @@ main: org.blueobsidian.worldTimer.WorldTimer
 api-version: '1.20'
 description: Enforces configurable time limits for specific worlds with rank-based overrides.
 authors: [BlueObsidian]
-depend: [LuckPerms]
-softdepend: [Multiverse-Core]
+softdepend: [LuckPerms, Multiverse-Core]
 
 commands:
   worldtimer:

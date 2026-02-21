@@ -51,6 +51,14 @@ public final class WorldTimer extends JavaPlugin {
         // Start timer task
         startTimerTask();
 
+        // Log LuckPerms status
+        boolean luckPermsEnabled = getServer().getPluginManager().isPluginEnabled("LuckPerms");
+        if (luckPermsEnabled) {
+            getLogger().info("LuckPerms detected. Permission-based limits and cooldowns enabled.");
+        } else {
+            getLogger().warning("LuckPerms not found. Using default limits and cooldowns from config.");
+        }
+
         getLogger().info("WorldTimer enabled. Tracking " + pluginConfig.getWorldConfigs().size() + " world(s).");
     }
 
