@@ -99,6 +99,9 @@ public class PlayerListener implements Listener {
         String fromWorld = event.getFrom().getName();
         String toWorld = player.getWorld().getName();
 
+        plugin.getLogger().info("[DEBUG] " + player.getName() + " changed world: '" + fromWorld + "' -> '" + toWorld + "'");
+        plugin.getLogger().info("[DEBUG] fromWorld configured: " + config.isWorldConfigured(fromWorld) + ", toWorld configured: " + config.isWorldConfigured(toWorld));
+
         // Stop tracking old world if it was configured
         if (config.isWorldConfigured(fromWorld)) {
             timerManager.handleWorldExit(player, fromWorld);
@@ -121,45 +124,54 @@ public class PlayerListener implements Listener {
      * Handles cross-world teleports into a limited world:
      * 1. Blocks the teleport if the player is on cooldown.
      * 2. Saves the player's current location as their return point before entry.
+     * Wrapped in try-catch for compatibility with plugins like CMI that may corrupt location data.
      */
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
-        if (event.getFrom().getWorld() == null || event.getTo() == null || event.getTo().getWorld() == null) {
-            return;
+        try {
+            if (event.getFrom() == null || event.getFrom().getWorld() == null
+                    || event.getTo() == null || event.getTo().getWorld() == null) {
+                return;
+            }
+
+            String fromWorld = event.getFrom().getWorld().getName();
+            String toWorld = event.getTo().getWorld().getName();
+
+            if (fromWorld.equalsIgnoreCase(toWorld)) {
+                return;
+            }
+
+            Player player = event.getPlayer();
+            PluginConfig config = plugin.getPluginConfig();
+
+            if (!config.isWorldConfigured(toWorld)) {
+                return;
+            }
+
+            WorldConfig wc = config.getWorldConfig(toWorld);
+            if (wc == null || player.hasPermission(wc.getBypassPermission())) {
+                return;
+            }
+
+            // Block entry if cooldown is active
+            PlayerTimerData data = storage.loadData(player.getUniqueId(), toWorld);
+            if (data.isCooldownActive()) {
+                event.setCancelled(true);
+                String cooldownStr = org.blueobsidian.worldTimer.util.TimeUtil.formatTime(data.getCooldownRemainingSeconds());
+                player.sendMessage(config.getMessageConfig().format(
+                        config.getMessageConfig().getCooldown(),
+                        toWorld, null, cooldownStr, player.getName()
+                ));
+                return;
+            }
+
+            // Save the player's current location as their return point
+            org.bukkit.Location fromLoc = event.getFrom();
+            if (fromLoc != null && fromLoc.getWorld() != null) {
+                storage.saveReturnLocation(player.getUniqueId(), fromLoc);
+            }
+        } catch (Exception e) {
+            plugin.getLogger().warning("[WorldTimer] Error in teleport handler (possibly caused by another plugin): " + e.getMessage());
         }
-
-        String fromWorld = event.getFrom().getWorld().getName();
-        String toWorld = event.getTo().getWorld().getName();
-
-        if (fromWorld.equalsIgnoreCase(toWorld)) {
-            return;
-        }
-
-        Player player = event.getPlayer();
-        PluginConfig config = plugin.getPluginConfig();
-
-        if (!config.isWorldConfigured(toWorld)) {
-            return;
-        }
-
-        WorldConfig wc = config.getWorldConfig(toWorld);
-        if (wc == null || player.hasPermission(wc.getBypassPermission())) {
-            return;
-        }
-
-        // Block entry if cooldown is active
-        PlayerTimerData data = storage.loadData(player.getUniqueId(), toWorld);
-        if (data.isCooldownActive()) {
-            event.setCancelled(true);
-            String cooldownStr = org.blueobsidian.worldTimer.util.TimeUtil.formatTime(data.getCooldownRemainingSeconds());
-            player.sendMessage(config.getMessageConfig().format(
-                    config.getMessageConfig().getCooldown(),
-                    toWorld, null, cooldownStr, player.getName()
-            ));
-            return;
-        }
-
-        // Save the player's current location as their return point
-        storage.saveReturnLocation(player.getUniqueId(), event.getFrom());
     }
 }

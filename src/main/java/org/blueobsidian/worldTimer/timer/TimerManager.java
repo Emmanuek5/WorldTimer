@@ -43,8 +43,9 @@ public class TimerManager {
         String key = uuid + ":" + world;
         MessageConfig msg = plugin.getPluginConfig().getMessageConfig();
 
-        // Check bypass
+        // Check bypass — no enforcement, but still notify
         if (player.hasPermission(worldConfig.getBypassPermission())) {
+            player.sendMessage(msg.format(msg.getEnterUnlimited(), world, null, null, player.getName()));
             return true;
         }
 

@@ -8,6 +8,9 @@ import org.blueobsidian.worldTimer.storage.SQLiteStorage;
 import org.blueobsidian.worldTimer.storage.StorageManager;
 import org.blueobsidian.worldTimer.timer.TimerManager;
 import org.blueobsidian.worldTimer.timer.TimerTask;
+import org.blueobsidian.worldTimer.config.WorldConfig;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -60,6 +63,17 @@ public final class WorldTimer extends JavaPlugin {
         }
 
         getLogger().info("WorldTimer enabled. Tracking " + pluginConfig.getWorldConfigs().size() + " world(s).");
+
+        // Validate configured worlds exist on the server
+        for (WorldConfig wc : pluginConfig.getWorldConfigs().values()) {
+            World w = Bukkit.getWorld(wc.getWorldName());
+            if (w != null) {
+                getLogger().info("  Configured world '" + wc.getWorldName() + "' -> FOUND (server world: '" + w.getName() + "')");
+            } else {
+                getLogger().warning("  Configured world '" + wc.getWorldName() + "' -> NOT FOUND on server! Check your config world name matches the exact Multiverse world name.");
+                getLogger().warning("  Available worlds: " + Bukkit.getWorlds().stream().map(World::getName).toList());
+            }
+        }
     }
 
     @Override
