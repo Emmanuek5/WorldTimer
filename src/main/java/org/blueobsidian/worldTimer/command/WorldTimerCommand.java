@@ -58,19 +58,20 @@ public class WorldTimerCommand implements CommandExecutor, TabCompleter {
     }
 
     private void handleStatus(CommandSender sender, String[] args) {
-        if (!sender.hasPermission("worldtimer.status") && !sender.hasPermission("worldtimer.admin")) {
-            sender.sendMessage(ChatColor.RED + "You don't have permission to do that.");
-            return;
-        }
-
         Player target;
         if (args.length >= 2) {
+            // Checking another player requires permission
+            if (!sender.hasPermission("worldtimer.status") && !sender.hasPermission("worldtimer.admin")) {
+                sender.sendMessage(ChatColor.RED + "You don't have permission to check other players.");
+                return;
+            }
             target = Bukkit.getPlayer(args[1]);
             if (target == null) {
                 sender.sendMessage(ChatColor.RED + "Player not found: " + args[1]);
                 return;
             }
         } else if (sender instanceof Player) {
+            // Self-check is always allowed
             target = (Player) sender;
         } else {
             sender.sendMessage(ChatColor.RED + "Usage: /worldtimer status <player>");

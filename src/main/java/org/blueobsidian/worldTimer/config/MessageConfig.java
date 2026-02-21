@@ -9,13 +9,18 @@ public class MessageConfig {
     private final String expired;
     private final String cooldown;
     private final String cooldownBypass;
+    private final String enter;
+    private final String enterUnlimited;
 
-    public MessageConfig(String prefix, String warn, String expired, String cooldown, String cooldownBypass) {
+    public MessageConfig(String prefix, String warn, String expired, String cooldown, String cooldownBypass,
+                         String enter, String enterUnlimited) {
         this.prefix = colorize(prefix);
         this.warn = colorize(warn);
         this.expired = colorize(expired);
         this.cooldown = colorize(cooldown);
         this.cooldownBypass = colorize(cooldownBypass);
+        this.enter = colorize(enter);
+        this.enterUnlimited = colorize(enterUnlimited);
     }
 
     public String getPrefix() {
@@ -36,6 +41,14 @@ public class MessageConfig {
 
     public String getCooldownBypass() {
         return cooldownBypass;
+    }
+
+    public String getEnter() {
+        return enter;
+    }
+
+    public String getEnterUnlimited() {
+        return enterUnlimited;
     }
 
     public String format(String template, String world, String timeRemaining, String cooldownRemaining, String playerName) {

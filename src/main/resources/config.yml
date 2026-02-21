@@ -22,6 +22,8 @@ messages:
   expired: "&cYour time in &6%world% &chas expired."
   cooldown: "&cYou must wait &6%cooldown_remaining% &cbefore re-entering &6%world%&c."
   cooldown-bypass: "&aYour cooldown for &6%world% &ahas been cleared."
+  enter: "&aWelcome to &6%world%&a! You have &6%time_remaining% &aremaining."
+  enter-unlimited: "&aWelcome to &6%world%&a! You have &6unlimited &atime."
 
 # Per-world configuration
 worlds:

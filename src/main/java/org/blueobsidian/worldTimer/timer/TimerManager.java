@@ -66,6 +66,15 @@ public class TimerManager {
         // If unlimited, no tracking needed but cache for reference
         activeTimers.put(key, data);
 
+        // Send entry notification
+        if (limit == -1) {
+            player.sendMessage(msg.format(msg.getEnterUnlimited(), world, null, null, player.getName()));
+        } else {
+            long remaining = Math.max(0, limit - data.getSecondsUsed());
+            String timeStr = TimeUtil.formatTime(remaining);
+            player.sendMessage(msg.format(msg.getEnter(), world, timeStr, null, player.getName()));
+        }
+
         return true;
     }
 

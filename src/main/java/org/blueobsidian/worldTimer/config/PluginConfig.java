@@ -47,7 +47,9 @@ public class PluginConfig {
                 config.getString("messages.warn", "&eYou have &6%time_remaining% &eremaining in &6%world%&e."),
                 config.getString("messages.expired", "&cYour time in &6%world% &chas expired."),
                 config.getString("messages.cooldown", "&cYou must wait &6%cooldown_remaining% &cbefore re-entering &6%world%&c."),
-                config.getString("messages.cooldown-bypass", "&aYour cooldown for &6%world% &ahas been cleared.")
+                config.getString("messages.cooldown-bypass", "&aYour cooldown for &6%world% &ahas been cleared."),
+                config.getString("messages.enter", "&aWelcome to &6%world%&a! You have &6%time_remaining% &aremaining."),
+                config.getString("messages.enter-unlimited", "&aWelcome to &6%world%&a! You have &6unlimited &atime.")
         );
 
         // Worlds
